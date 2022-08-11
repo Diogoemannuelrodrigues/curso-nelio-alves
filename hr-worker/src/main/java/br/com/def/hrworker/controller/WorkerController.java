@@ -3,7 +3,9 @@ package br.com.def.hrworker.controller;
 import java.net.URI;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +20,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.def.hrworker.entidade.Worker;
 import br.com.def.hrworker.service.WorkerService;
 
+@Slf4j
 @RestController
 @RequestMapping("/workers")
 public class WorkerController {
+
+	@Autowired
+	private Environment env;
 
 	@Autowired
 	private WorkerService workService;
@@ -38,6 +44,8 @@ public class WorkerController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Worker> getId(@PathVariable String id) {
 		var work = workService.findByIdWorker(id);
+
+		log.warn("Port = "+ env.getProperty("local.server.port"));
 
 		if (work != null) {
 			return ResponseEntity.ok(work);
